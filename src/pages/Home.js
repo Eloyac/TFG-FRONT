@@ -7,9 +7,15 @@ const Home = () => {
 
   const createGame = async () => {
     try {
+      const token = localStorage.getItem('token'); // Obtener el token del localStorage
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
       const response = await axios.post('https://tfg-back.onrender.com/api/games/create', {}, {
         headers: {
-          'x-auth-token': localStorage.getItem('token'),
+          'x-auth-token': token, // Enviar el token en los encabezados de la solicitud
         }
       });
       const { gameId } = response.data;
