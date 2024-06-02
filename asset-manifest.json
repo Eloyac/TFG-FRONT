@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/TFG-FRONT/static/css/main.d006b3bd.chunk.css",
-    "main.js": "/TFG-FRONT/static/js/main.991c02fe.chunk.js",
-    "main.js.map": "/TFG-FRONT/static/js/main.991c02fe.chunk.js.map",
+    "main.js": "/TFG-FRONT/static/js/main.65d504c9.chunk.js",
+    "main.js.map": "/TFG-FRONT/static/js/main.65d504c9.chunk.js.map",
     "runtime-main.js": "/TFG-FRONT/static/js/runtime-main.58a9d718.js",
     "runtime-main.js.map": "/TFG-FRONT/static/js/runtime-main.58a9d718.js.map",
-    "static/js/2.76dfb3f6.chunk.js": "/TFG-FRONT/static/js/2.76dfb3f6.chunk.js",
-    "static/js/2.76dfb3f6.chunk.js.map": "/TFG-FRONT/static/js/2.76dfb3f6.chunk.js.map",
+    "static/js/2.56a2b28b.chunk.js": "/TFG-FRONT/static/js/2.56a2b28b.chunk.js",
+    "static/js/2.56a2b28b.chunk.js.map": "/TFG-FRONT/static/js/2.56a2b28b.chunk.js.map",
     "index.html": "/TFG-FRONT/index.html",
     "static/css/main.d006b3bd.chunk.css.map": "/TFG-FRONT/static/css/main.d006b3bd.chunk.css.map",
-    "static/js/2.76dfb3f6.chunk.js.LICENSE.txt": "/TFG-FRONT/static/js/2.76dfb3f6.chunk.js.LICENSE.txt"
+    "static/js/2.56a2b28b.chunk.js.LICENSE.txt": "/TFG-FRONT/static/js/2.56a2b28b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.58a9d718.js",
-    "static/js/2.76dfb3f6.chunk.js",
+    "static/js/2.56a2b28b.chunk.js",
     "static/css/main.d006b3bd.chunk.css",
-    "static/js/main.991c02fe.chunk.js"
+    "static/js/main.65d504c9.chunk.js"
   ]
 }
