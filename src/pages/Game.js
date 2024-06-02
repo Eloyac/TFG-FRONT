@@ -26,7 +26,7 @@ const Game = () => {
 
   useEffect(() => {
     const fetchGame = async () => {
-      const response = await axios.get(`http://localhost:5000/api/games/${gameId}`);
+      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`);
       const savedGame = new Chess(response.data.boardState);
       setGame(savedGame);
     };
