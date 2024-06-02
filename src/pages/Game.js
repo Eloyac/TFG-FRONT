@@ -7,7 +7,7 @@ import Chat from './Chat';
 import axios from 'axios';
 
 const Game = () => {
-  const { gameId } = useParams();
+  const { gameId } = useParams(); // Obtener el gameId de la URL
   const [game, setGame] = useState(new Chess());
 
   useEffect(() => {
@@ -28,7 +28,11 @@ const Game = () => {
 
   useEffect(() => {
     const fetchGame = async () => {
-      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`);
+      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        }
+      });
       const savedGame = new Chess(response.data.boardState);
       setGame(savedGame);
     };
