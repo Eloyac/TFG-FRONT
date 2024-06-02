@@ -13,6 +13,8 @@ const Game = () => {
   useEffect(() => {
     socket.connect();
 
+    socket.emit('joinGame', gameId);
+
     socket.on('move', (move) => {
       const newGame = new Chess(game.fen());
       newGame.move(move);
@@ -22,7 +24,7 @@ const Game = () => {
     return () => {
       socket.disconnect();
     };
-  }, [game]);
+  }, [game, gameId]);
 
   useEffect(() => {
     const fetchGame = async () => {
