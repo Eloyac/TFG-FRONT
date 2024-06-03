@@ -1,45 +1,51 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const { email, password } = formData;
+
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/api/auth/login`, {
-        email,
-        password
-      });
-      // Manejar la respuesta
-      console.log(response.data);
-    } catch (error) {
-      setError('Invalid credentials');
+      const res = await axios.post('https://tfg-back.onrender.com/api/auth/login', formData);
+      localStorage.setItem('token', res.data.token);
+      navigate('/');
+    } catch (err) {
+      console.error(err.response.data);
     }
   };
 
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <input
           type="email"
           placeholder="Email"
+          name="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={onChange}
+          required
         />
         <input
           type="password"
           placeholder="Password"
+          name="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={onChange}
+          required
         />
         <button type="submit">Login</button>
-        {error && <p>{error}</p>}
       </form>
     </div>
   );

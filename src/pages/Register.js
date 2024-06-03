@@ -1,53 +1,60 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const { name, email, password } = formData;
+
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
-        username,
-        email,
-        password
-      });
-      // Manejar la respuesta
-      console.log(response.data);
-    } catch (error) {
-      setError('Error registering user');
+      const res = await axios.post('https://tfg-back.onrender.com/api/auth/register', formData);
+      localStorage.setItem('token', res.data.token);
+      navigate('/');
+    } catch (err) {
+      console.error(err.response.data);
     }
   };
 
   return (
     <div>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Name"
+          name="name"
+          value={name}
+          onChange={onChange}
+          required
         />
         <input
           type="email"
           placeholder="Email"
+          name="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={onChange}
+          required
         />
         <input
           type="password"
           placeholder="Password"
+          name="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={onChange}
+          required
         />
         <button type="submit">Register</button>
-        {error && <p>{error}</p>}
       </form>
     </div>
   );
