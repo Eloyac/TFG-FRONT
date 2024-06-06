@@ -2,52 +2,39 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-  const API_URL = process.env.REACT_APP_API_URL;
-
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
-        username,
-        email,
-        password
-      });
-      // Manejar la respuesta
-      console.log(response.data);
-    } catch (error) {
-      setError('Error registering user');
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, { name, email, password });
+      console.log(res.data);
+      // Almacena el token JWT en el localStorage o maneja el registro de otra manera
+      localStorage.setItem('token', res.data.token);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
     <div>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      <form onSubmit={handleRegister}>
+        <div>
+          <label>Name:</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
         <button type="submit">Register</button>
-        {error && <p>{error}</p>}
       </form>
     </div>
   );

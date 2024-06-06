@@ -13,12 +13,12 @@ const Home = () => {
         return;
       }
 
-      const response = await axios.post('https://tfg-back.onrender.com/api/games/create', {}, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/games/create`, {}, {
         headers: {
           'x-auth-token': token, // Enviar el token en los encabezados de la solicitud
         }
       });
-      const { gameId } = response.data;
+      const { _id: gameId } = response.data;
       navigate(`/game/${gameId}`);
     } catch (error) {
       console.error('Error creating game', error);

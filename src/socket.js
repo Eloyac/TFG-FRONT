@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:5000'; // Asegúrate de que el puerto coincida con el backend
+const SOCKET_URL = 'https://tfg-back.onrender.com'; // Actualiza la URL para que coincida con el backend en Render
 
 const token = localStorage.getItem('token');
 

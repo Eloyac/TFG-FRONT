@@ -28,7 +28,7 @@ const Game = () => {
 
   useEffect(() => {
     const fetchGame = async () => {
-      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/games/${gameId}`, {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
         }
