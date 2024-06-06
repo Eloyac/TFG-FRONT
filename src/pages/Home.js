@@ -7,7 +7,7 @@ const Home = () => {
 
   const createGame = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del localStorage
+      const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
         return;
@@ -15,7 +15,7 @@ const Home = () => {
 
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/games/create`, {}, {
         headers: {
-          'x-auth-token': token, // Enviar el token en los encabezados de la solicitud
+          'x-auth-token': token,
         }
       });
       const { _id: gameId } = response.data;
