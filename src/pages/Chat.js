@@ -27,22 +27,23 @@ const Chat = ({ gameId }) => {
 
   return (
     <div>
-      <List>
+      <List className='h-64 w-full block bg-teal-400' > 
         {messages.map((msg, index) => (
           <ListItem key={index}>
             <ListItemText primary={msg.text} />
           </ListItem>
         ))}
       </List>
-      <form onSubmit={sendMessage}>
+      <form onSubmit={sendMessage} className="flex mt-4">
         <TextField
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           fullWidth
           margin="normal"
+          className="mr-2"
         />
-        <Button type="submit" variant="contained" color="primary">
+        <Button type="submit" className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"'>
           Send
         </Button>
       </form>

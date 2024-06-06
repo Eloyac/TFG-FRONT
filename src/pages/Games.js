@@ -24,16 +24,18 @@ const Games = () => {
   }, [API_URL]);
 
   return (
-    <div>
-      <h1>My Games</h1>
-      {error && <p>{error}</p>}
-      <ul>
-        {games.map((game) => (
-          <li key={game._id}>
-            Game between {game.player1} and {game.player2} - Result: {game.result}
-          </li>
-        ))}
-      </ul>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
+        <h1 className="text-2xl font-bold mb-4">My Games</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <ul>
+          {games.map((game) => (
+            <li key={game._id} className="mb-2">
+              Game between {game.player1} and {game.player2} - Result: {game.result}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

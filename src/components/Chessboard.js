@@ -11,7 +11,7 @@ const ChessboardComponent = () => {
     const result = newGame.move({
       from: move.sourceSquare,
       to: move.targetSquare,
-      promotion: 'q', // siempre promociona a una reina por simplicidad
+      promotion: 'q',
     });
 
     if (result) {
@@ -21,12 +21,10 @@ const ChessboardComponent = () => {
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-center">
       <Chessboard
         position={fen}
-        onPieceDrop={(sourceSquare, targetSquare) =>
-          handleMove({ sourceSquare, targetSquare })
-        }
+        onPieceDrop={(sourceSquare, targetSquare) => handleMove({ sourceSquare, targetSquare })}
       />
     </div>
   );
