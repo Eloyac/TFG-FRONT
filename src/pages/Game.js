@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { socket } from '../socket';
-import { useParams } from 'react-router-dom';
-import Chat from './Chat';
 import axios from 'axios';
+import Chat from './Chat';
 
 const Game = () => {
   const { gameId } = useParams();
   const [game, setGame] = useState(new Chess());
+  const [color, setColor] = useState('w');
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    socket.auth = { token };
     socket.connect();
 
     socket.emit('joinGame', gameId);
@@ -24,34 +28,27 @@ const Game = () => {
     return () => {
       socket.disconnect();
     };
-  }, [game, gameId]);
+  }, [gameId]);
 
   useEffect(() => {
     const fetchGame = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/games/${gameId}`, {
-        headers: {
-          'x-auth-token': localStorage.getItem('token'),
-        }
+      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
+        headers: { 'x-auth-token': localStorage.getItem('token') }
       });
       const savedGame = new Chess(response.data.boardState);
       setGame(savedGame);
+      
+      // Determina el color del jugador
+      const userId = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).user.id;
+      if (response.data.player1 === userId) {
+        setColor('w');
+      } else {
+        setColor('b');
+      }
     };
 
     fetchGame();
   }, [gameId]);
-
-  const handleResult = (game) => {
-    if (game.in_checkmate()) {
-      if (game.turn() === 'b') {
-        return 'player1';
-      } else {
-        return 'player2';
-      }
-    } else if (game.in_draw()) {
-      return 'draw';
-    }
-    return 'ongoing';
-  };
 
   const handleMove = (sourceSquare, targetSquare) => {
     const newGame = new Chess(game.fen());
@@ -62,21 +59,26 @@ const Game = () => {
     });
     if (move === null) return;
 
-    const result = handleResult(newGame);
     setGame(newGame);
-    socket.emit('move', { gameId, move, fen: newGame.fen(), turn: newGame.turn(), result });
+
+    socket.emit('move', {
+      gameId,
+      move,
+      fen: newGame.fen(),
+      turn: newGame.turn(),
+      result: newGame.game_over() ? (newGame.in_checkmate() ? 'checkmate' : 'draw') : 'ongoing',
+    });
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Game</h1>
-        <Chessboard
-          position={game.fen()}
-          onPieceDrop={(sourceSquare, targetSquare) => handleMove(sourceSquare, targetSquare)}
-        />
-        {/* <Chat gameId={gameId} /> */}
-      </div>
+    <div>
+      <h1>Game</h1>
+      <Chessboard
+        position={game.fen()}
+        onPieceDrop={(sourceSquare, targetSquare) => handleMove(sourceSquare, targetSquare)}
+        orientation={color === 'w' ? 'white' : 'black'}
+      />
+      <Chat gameId={gameId} />
     </div>
   );
 };

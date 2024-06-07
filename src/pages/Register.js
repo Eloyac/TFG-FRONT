@@ -23,10 +23,10 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Register</h1>
+        <h1 className="text-2xl font-bold mb-4">Regístrate</h1>
         <form onSubmit={handleRegister}>
           <div className="mb-4">
-            <label className="block text-gray-700">Name:</label>
+            <label className="block text-gray-700">Nombre:</label>
             <input 
               type="text" 
               value={name} 
@@ -44,7 +44,7 @@ const Register = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password:</label>
+            <label className="block text-gray-700">Contraseña:</label>
             <input 
               type="password" 
               value={password} 
@@ -53,9 +53,18 @@ const Register = () => {
             />
           </div>
           <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Register
+            Regístrate
           </button>
         </form>
+        <p className="text-center text-gray-600 mt-4">
+          ¿Ya tienes una cuenta?{' '}
+          <button 
+            onClick={() => navigate('/')} 
+            className="text-blue-500 hover:underline focus:outline-none"
+          >
+            Inicia sesión
+          </button>
+        </p>
       </div>
     </div>
   );
