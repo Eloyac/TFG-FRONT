@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/TFG-FRONT/static/css/main.b24f0b81.css",
-    "main.js": "/TFG-FRONT/static/js/main.b71728f7.js",
+    "main.js": "/TFG-FRONT/static/js/main.cbc1adec.js",
     "index.html": "/TFG-FRONT/index.html",
     "main.b24f0b81.css.map": "/TFG-FRONT/static/css/main.b24f0b81.css.map",
-    "main.b71728f7.js.map": "/TFG-FRONT/static/js/main.b71728f7.js.map"
+    "main.cbc1adec.js.map": "/TFG-FRONT/static/js/main.cbc1adec.js.map"
   },
   "entrypoints": [
     "static/css/main.b24f0b81.css",
-    "static/js/main.b71728f7.js"
+    "static/js/main.cbc1adec.js"
   ]
 }
