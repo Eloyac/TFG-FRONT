@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const [gameId, setGameId] = useState('');
   const navigate = useNavigate();
+  const [gameId, setGameId] = useState('');
 
   const createGame = async () => {
     try {
@@ -27,15 +27,15 @@ const Home = () => {
     }
   };
 
-  const handleJoin = async () => {
+  const joinGame = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del localStorage
+      const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
         return;
       }
 
-      const res = await axios.post(`https://tfg-back.onrender.com/api/games/join`, 
+      const response = await axios.post(`https://tfg-back.onrender.com/api/games/join`, 
         { gameId }, 
         { headers: { 'x-auth-token': token } }
       );
@@ -48,26 +48,25 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Welcome to FESACHESS</h1>
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-6">
-        <button 
-          className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4" 
-          onClick={createGame}
-        >
+      <div className="flex space-x-4">
+        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={createGame}>
           Create New Game
         </button>
-        <input 
-          type="text" 
-          value={gameId} 
-          onChange={(e) => setGameId(e.target.value)} 
-          placeholder="Enter Game ID" 
-          className="w-full px-3 py-2 mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-        />
-        <button 
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-          onClick={handleJoin}
-        >
-          Join Game
-        </button>
+        <div className="flex items-center space-x-2">
+          <input 
+            type="text" 
+            value={gameId} 
+            onChange={(e) => setGameId(e.target.value)} 
+            placeholder="Enter Game ID" 
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+          />
+          <button 
+            onClick={joinGame} 
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Join Game
+          </button>
+        </div>
       </div>
     </div>
   );

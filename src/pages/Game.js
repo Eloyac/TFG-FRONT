@@ -1,15 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { socket } from '../socket';
 import axios from 'axios';
-import Chat from './Chat';
 
 const Game = () => {
   const { gameId } = useParams();
   const [game, setGame] = useState(new Chess());
   const [color, setColor] = useState('w');
+  const [player1Name, setPlayer1Name] = useState('Jugador 1');
+  const [player2Name, setPlayer2Name] = useState('Jugador 2');
+  const [userColor, setUserColor] = useState('w');
+
+  // Función para manejar el movimiento
+  const handleMove = useCallback((sourceSquare, targetSquare) => {
+    if (game.turn() !== userColor) return; // Solo permitir mover piezas del color del usuario
+
+    const newGame = new Chess(game.fen());
+    const move = newGame.move({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: 'q',
+    });
+    if (move === null) return;
+
+    setGame(newGame);
+
+    socket.emit('move', {
+      gameId,
+      move,
+      fen: newGame.fen(),
+      turn: newGame.turn(),
+      result: newGame.game_over() ? (newGame.in_checkmate() ? 'checkmate' : 'draw') : 'ongoing',
+    });
+  }, [game, gameId, userColor]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -31,54 +56,65 @@ const Game = () => {
   }, [gameId]);
 
   useEffect(() => {
-    const fetchGame = async () => {
-      const response = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
-      const savedGame = new Chess(response.data.boardState);
-      setGame(savedGame);
-      
-      // Determina el color del jugador
-      const userId = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).user.id;
-      if (response.data.player1 === userId) {
-        setColor('w');
-      } else {
-        setColor('b');
+    const fetchGameAndPlayers = async () => {
+      try {
+        const gameResponse = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('token') }
+        });
+        const savedGame = new Chess(gameResponse.data.boardState);
+        if (!savedGame.load(gameResponse.data.boardState)) {
+          console.error("Error loading FEN:", gameResponse.data.boardState);
+          return;
+        }
+        setGame(savedGame);
+
+        const userId = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).user.id;
+
+        // Obtener nombres de usuario de player1 y player2
+        const player1Promise = axios.get(`https://tfg-back.onrender.com/api/auth/user/${gameResponse.data.player1}`, {
+          headers: { 'x-auth-token': localStorage.getItem('token') }
+        });
+
+        const player2Promise = gameResponse.data.player2
+          ? axios.get(`https://tfg-back.onrender.com/api/auth/user/${gameResponse.data.player2}`, {
+              headers: { 'x-auth-token': localStorage.getItem('token') }
+            })
+          : Promise.resolve({ data: { name: 'Jugador 2' } });
+
+        const [player1Response, player2Response] = await Promise.all([player1Promise, player2Promise]);
+        setPlayer1Name(player1Response.data.name);
+        setPlayer2Name(player2Response.data.name);
+
+        // Determina el color del jugador actual
+        if (gameResponse.data.player1 === userId) {
+          setColor('w');
+          setUserColor('w');
+        } else {
+          setColor('b');
+          setUserColor('b');
+        }
+      } catch (err) {
+        console.error('Error fetching game or user:', err);
       }
     };
 
-    fetchGame();
+    fetchGameAndPlayers();
   }, [gameId]);
 
-  const handleMove = (sourceSquare, targetSquare) => {
-    const newGame = new Chess(game.fen());
-    const move = newGame.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q',
-    });
-    if (move === null) return;
-
-    setGame(newGame);
-
-    socket.emit('move', {
-      gameId,
-      move,
-      fen: newGame.fen(),
-      turn: newGame.turn(),
-      result: newGame.game_over() ? (newGame.in_checkmate() ? 'checkmate' : 'draw') : 'ongoing',
-    });
-  };
-
   return (
-    <div>
-      <h1>Game</h1>
-      <Chessboard
-        position={game.fen()}
-        onPieceDrop={(sourceSquare, targetSquare) => handleMove(sourceSquare, targetSquare)}
-        orientation={color === 'w' ? 'white' : 'black'}
-      />
-      <Chat gameId={gameId} />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold mb-2">{color === 'w' ? player1Name : player2Name} (Blancas)</h2>
+          <Chessboard
+            position={game.fen()}
+            onPieceDrop={(sourceSquare, targetSquare) => handleMove(sourceSquare, targetSquare)}
+            orientation={color === 'w' ? 'white' : 'black'}
+            className="mb-4"
+          />
+          <h2 className="text-2xl font-bold mb-2">{color === 'w' ? player2Name : player1Name} (Negras)</h2>
+        </div>
+      </div>
     </div>
   );
 };

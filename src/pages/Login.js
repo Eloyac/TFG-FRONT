@@ -47,14 +47,8 @@ const Login = () => {
             Login
           </button>
         </form>
-        <p className="text-center text-gray-600 mt-4">
-          ¿Todavía no tienes una cuenta?{' '}
-          <button 
-            onClick={() => navigate('/register')} 
-            className="text-blue-500 hover:underline focus:outline-none"
-          >
-            Regístrate
-          </button>
+        <p className="mt-4 text-center">
+          Todavía no tienes una cuenta? <a href="#/register" className="text-blue-500 hover:underline">Regístrate</a>
         </p>
       </div>
     </div>
