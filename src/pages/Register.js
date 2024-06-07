@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, { name, email, password });
       console.log(res.data);
-      localStorage.setItem('token', res.data.token);
+      // Redirigir al usuario a la pantalla de inicio de sesión
+      navigate('/');
     } catch (err) {
       console.error(err);
     }

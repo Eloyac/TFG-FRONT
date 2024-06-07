@@ -27,7 +27,7 @@ const Chat = ({ gameId }) => {
 
   return (
     <div>
-      <List className='h-64 w-full block bg-teal-400' > 
+      <List className='h-64 w-full block ' > 
         {messages.map((msg, index) => (
           <ListItem key={index}>
             <ListItemText primary={msg.text} />
