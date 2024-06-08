@@ -13,16 +13,19 @@ const Game = () => {
   const [player2Name, setPlayer2Name] = useState('Jugador 2');
   const [userColor, setUserColor] = useState('w');
 
-  // Función para manejar el movimiento
   const handleMove = useCallback((sourceSquare, targetSquare) => {
-    if (game.turn() !== userColor) return; // Solo permitir mover piezas del color del usuario
+    if (game.turn() !== userColor) {
+      console.log("Not your turn");
+      return;
+    }
 
     const newGame = new Chess(game.fen());
     const move = newGame.move({
       from: sourceSquare,
       to: targetSquare,
-      promotion: 'q',
+      promotion: 'q', 
     });
+
     if (move === null) return;
 
     setGame(newGame);
@@ -44,9 +47,10 @@ const Game = () => {
 
     socket.emit('joinGame', gameId);
 
-    socket.on('move', (move) => {
-      const newGame = new Chess(game.fen());
-      newGame.move(move);
+    socket.on('move', (data) => {
+      console.log('Move received:', data);
+      const newGame = new Chess();
+      newGame.load(data.fen);
       setGame(newGame);
     });
 
@@ -58,7 +62,7 @@ const Game = () => {
   useEffect(() => {
     const fetchGameAndPlayers = async () => {
       try {
-        const gameResponse = await axios.get(`https://tfg-back.onrender.com/api/games/${gameId}`, {
+        const gameResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/games/${gameId}`, {
           headers: { 'x-auth-token': localStorage.getItem('token') }
         });
         const savedGame = new Chess(gameResponse.data.boardState);
@@ -70,13 +74,12 @@ const Game = () => {
 
         const userId = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).user.id;
 
-        // Obtener nombres de usuario de player1 y player2
-        const player1Promise = axios.get(`https://tfg-back.onrender.com/api/auth/user/${gameResponse.data.player1}`, {
+        const player1Promise = axios.get(`${process.env.REACT_APP_API_URL}/api/auth/user/${gameResponse.data.player1}`, {
           headers: { 'x-auth-token': localStorage.getItem('token') }
         });
 
         const player2Promise = gameResponse.data.player2
-          ? axios.get(`https://tfg-back.onrender.com/api/auth/user/${gameResponse.data.player2}`, {
+          ? axios.get(`${process.env.REACT_APP_API_URL}/api/auth/user/${gameResponse.data.player2}`, {
               headers: { 'x-auth-token': localStorage.getItem('token') }
             })
           : Promise.resolve({ data: { name: 'Jugador 2' } });
@@ -85,7 +88,6 @@ const Game = () => {
         setPlayer1Name(player1Response.data.name);
         setPlayer2Name(player2Response.data.name);
 
-        // Determina el color del jugador actual
         if (gameResponse.data.player1 === userId) {
           setColor('w');
           setUserColor('w');
@@ -105,14 +107,14 @@ const Game = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold mb-2">{color === 'w' ? player1Name : player2Name} (Blancas)</h2>
+          <h2 className="text-2xl font-bold mb-2">{userColor === 'w' ? player1Name : player2Name}</h2>
           <Chessboard
             position={game.fen()}
             onPieceDrop={(sourceSquare, targetSquare) => handleMove(sourceSquare, targetSquare)}
-            orientation={color === 'w' ? 'white' : 'black'}
+            orientation={userColor === 'w' ? 'white' : 'black'}
             className="mb-4"
           />
-          <h2 className="text-2xl font-bold mb-2">{color === 'w' ? player2Name : player1Name} (Negras)</h2>
+          <h2 className="text-2xl font-bold mb-2">{userColor === 'w' ? player2Name : player1Name}</h2>
         </div>
       </div>
     </div>

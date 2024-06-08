@@ -13,7 +13,6 @@ const Login = () => {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
       console.log(res.data);
       localStorage.setItem('token', res.data.token);
-      // Redirigir al usuario a la pantalla de inicio
       navigate('/home');
     } catch (err) {
       console.error(err);
