@@ -3,7 +3,6 @@ import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Games from './pages/Games';
 import Game from './pages/Game';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -18,14 +17,6 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/games"
-          element={
-            <ProtectedRoute>
-              <Games />
             </ProtectedRoute>
           }
         />

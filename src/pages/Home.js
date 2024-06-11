@@ -47,24 +47,24 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Welcome to FESACHESS</h1>
-      <div className="flex space-x-4">
+      <h1 className="text-3xl font-bold mb-6">FESACHESS</h1>
+      <div className="flex flex-col items-center justify-center space-x-4">
         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={createGame}>
-          Create New Game
+          Crear nueva partida
         </button>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 mt-4">
           <input 
             type="text" 
             value={gameId} 
             onChange={(e) => setGameId(e.target.value)} 
-            placeholder="Enter Game ID" 
+            placeholder="Introduce el id de la partida" 
             className="px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           />
           <button 
             onClick={joinGame} 
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           >
-            Join Game
+            Unirme a paritda
           </button>
         </div>
       </div>

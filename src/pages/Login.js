@@ -22,7 +22,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Login</h1>
+        <h1 className="text-2xl font-bold mb-4">Inicio de sesión</h1>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700">Email:</label>
@@ -34,7 +34,7 @@ const Login = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password:</label>
+            <label className="block text-gray-700">Constraseña:</label>
             <input 
               type="password" 
               value={password} 
@@ -43,7 +43,7 @@ const Login = () => {
             />
           </div>
           <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Login
+            Iniciar sesión
           </button>
         </form>
         <p className="mt-4 text-center">
